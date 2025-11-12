@@ -19,10 +19,6 @@ Tento projekt obsahuje jednoduchý Modbus TCP server napsaný v Pythonu, který 
 - [Docker](https://www.docker.com/get-started)
 - [Python 3](https://www.python.org/)
 
-## Sestavení a spuštění
-
-Všechny příkazy spouštějte z kořenového adresáře tohoto projektu (`/Users/miikue/Downloads/NOBACKUP/prace/simulator`).
-
 ### 1. Sestavení Docker image
 
 Tento příkaz sestaví Docker image s názvem `modbus-simulator`.
@@ -80,48 +76,3 @@ Součástí projektu je jednoduchý klient `modbus_client.py` pro rychlé ověř
     python modbus_client.py
     ```
 
-    Pokud vše funguje, skript vypíše aktuální hodnoty `uint16`, `float32` (sinus a kosinus) a `float64` (rampa a trojúhelník) ze simulátoru.
-
-## Testovací konfigurace (`config.json`)
-
-Pro klienty, kteří vyžadují konfigurační soubor pro definici Modbus tagů (např. ThingsBoard Gateway), je k dispozici soubor `config.json`. Tento soubor definuje všechny simulované registry.
-
-```json
-[
-  {
-    "tag": "uint16_value_${address}",
-    "type": "uint16",
-    "functionCode": 3,
-    "address": "0-9",
-    "objectsCount": 1
-  },
-  {
-    "tag": "float32_sine",
-    "type": "32float",
-    "functionCode": 3,
-    "address": 20,
-    "objectsCount": 2
-  },
-  {
-    "tag": "float32_cosine",
-    "type": "32float",
-    "functionCode": 3,
-    "address": 22,
-    "objectsCount": 2
-  },
-  {
-    "tag": "float64_ramp",
-    "type": "64float",
-    "functionCode": 3,
-    "address": 30,
-    "objectsCount": 4
-  },
-  {
-    "tag": "float64_triangle",
-    "type": "64float",
-    "functionCode": 3,
-    "address": 34,
-    "objectsCount": 4
-  }
-]
-```
