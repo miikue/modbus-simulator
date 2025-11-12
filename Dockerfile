@@ -16,6 +16,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Zkopírujeme skript simulátoru
 COPY simulator.py .
 
+# Přidáme verzi sestavení
+ARG VERSION=unknown
+RUN echo $VERSION > /app/version.txt
+
 # Vystavíme port, na kterém Modbus server naslouchá
 EXPOSE 5020
 

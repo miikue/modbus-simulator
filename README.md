@@ -21,27 +21,13 @@ Tento projekt obsahuje jednoduchý Modbus TCP server napsaný v Pythonu, který 
 
 ### 1. Sestavení Docker image
 
-Tento příkaz sestaví Docker image s názvem `modbus-simulator`.
+Tento příkaz sestaví Docker image s názvem `modbus-simulator`. Verze se automaticky generuje z posledního `git tagu`.
 
 ```bash
-docker build -t modbus-simulator .
+VERSION=$(git describe --tags --always)
+docker build -t modbus-simulator --build-arg VERSION=$VERSION .
 ```
 
-### 2. Spuštění Docker kontejneru
-
-Tento příkaz spustí kontejner na pozadí. Server bude dostupný na `localhost:5020`.
-
-```bash
-docker run -d -p 5020:5020 --rm --name modbus-sim modbus-simulator
-```
-
-### Parametry příkazu `docker run`
-
-- `-d`: Spustí kontejner na pozadí (detached mode).
-- `-p 5020:5020`: Mapuje port `5020` z kontejneru na port `5020` na vašem počítači.
-- `--rm`: Automaticky odstraní kontejner po jeho zastavení.
-- `--name modbus-sim`: Pojmenuje kontejner pro snazší správu.
-- `modbus-simulator`: Název image, která se má spustit.
 
 ## Ověření
 

@@ -109,6 +109,13 @@ def main():
     """
     Hlavní funkce pro spuštění Modbus TCP serveru.
     """
+    try:
+        with open('/app/version.txt', 'r') as f:
+            version = f.read().strip()
+        print(f"Verze simulátoru: {version}")
+    except FileNotFoundError:
+        print("Verze simulátoru: neznamá (soubor /app/version.txt nenalezen)")
+
     print("Konfiguruji Modbus TCP server.")
     datablock = CustomDataBlock(0, [0] * 100)
     slave_context = ModbusSlaveContext(hr=datablock)
