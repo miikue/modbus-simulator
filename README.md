@@ -62,3 +62,13 @@ Součástí projektu je jednoduchý klient `modbus_client.py` pro rychlé ověř
     python modbus_client.py
     ```
 
+## CI/CD
+
+Tento projekt využívá GitHub Actions pro automatické sestavování a publikování Docker image do [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+
+Workflow se spustí při:
+- **push** do větve `main`
+- vytvoření **tagu** ve formátu `v*.*.*`
+
+Image je publikována pod názvem `ghcr.io/OWNER/modbus-simulator:VERSION`, kde `OWNER` je vlastník repozitáře a `VERSION` odpovídá `git tagu`.
+
