@@ -28,11 +28,7 @@ jobs:
       - name: Set image version
         id: vars
         run: |
-          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            VERSION="${GITHUB_REF#refs/tags/}"
-          else
-            VERSION="sha-${GITHUB_SHA::7}"
-          fi
+          VERSION=$(cat VERSION)
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build and push multi-arch

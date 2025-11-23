@@ -1,27 +1,26 @@
-# Použijeme oficiální Python image jako základ
+# Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
-# Nastavíme pracovní adresář v kontejneru
+# Set the working directory in the container
 WORKDIR /app
 
-# Zkopírujeme soubor se závislostmi
+# Copy the dependencies file
 COPY requirements.txt .
 
-# Nainstalujeme systémové závislosti potřebné pro kompilaci (např. pro numpy)
+# Install system dependencies required for compilation
 RUN apt-get update && apt-get install -y build-essential
 
-# Nainstalujeme závislosti
+# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Zkopírujeme skript simulátoru
+# Copy the simulator script
 COPY simulator.py .
 
-# Přidáme verzi sestavení
-ARG VERSION=unknown
-RUN echo $VERSION > /app/version.txt
+# Copy the version file into the image
+COPY VERSION /app/version.txt
 
-# Vystavíme port, na kterém Modbus server naslouchá
+# Make port 5020 available to the world outside this container
 EXPOSE 5020
 
-# Spustíme simulátor při startu kontejneru
+# Run the simulator when the container launches
 CMD ["python", "simulator.py"]
