@@ -1,74 +1,78 @@
-# Modbus TCP Simulátor
+# Modbus TCP Simulator
 
-Tento projekt obsahuje jednoduchý Modbus TCP server napsaný v Pythonu, který simuluje zařízení poskytující různé typy dat. Aplikace je připravena pro spuštění v Docker kontejneru.
+This project provides a simple Modbus TCP server written in Python, designed to simulate a device that provides various data types. It also includes a client for testing and can be run either locally using scripts or as a Docker container.
 
-## Funkce
+## Features
 
-- Spouští Modbus TCP server na portu `5020`.
-- Periodicky (každou sekundu) aktualizuje různé typy registrů:
-  - **Registry 0-9:** Deset 16-bitových celých čísel (`uint16`), které cyklují s hodnotami od 0 do 50.
-  - **Registry 20-23:** Dvě 32-bitové float hodnoty (Big-Endian):
-    - **Registry 20-21:** Hodnota **sinus**.
-    - **Registry 22-23:** Hodnota **kosinus**.
-  - **Registry 30-37:** Dvě 64-bitové float hodnoty (Big-Endian):
-    - **Registry 30-33:** Hodnota **lineární rampy**.
-    - **Registry 34-37:** Hodnota **trojúhelníkového průběhu**.
+-   **Modbus TCP Server:** Runs on port `5020`.
+-   **Periodic Data Updates:** Every second, the server updates several holding registers with new values:
+    -   **Registers 0-9 (uint16):** Ten 16-bit integers that cycle through values from 0 to 50.
+    -   **Registers 20-23 (float32):** Two 32-bit floating-point values (Big-Endian):
+        -   **Regs 20-21:** A sine wave value.
+        -   **Regs 22-23:** A cosine wave value.
+    -   **Registers 30-37 (float64):** Two 64-bit floating-point values (Big-Endian):
+        -   **Regs 30-33:** A linear ramp value.
+        -   **Regs 34-37:** A triangle wave value.
 
-## Požadavky
+## Project Structure
 
-- [Docker](https://www.docker.com/get-started)
-- [Python 3](https://www.python.org/)
+-   `simulator.py`: The Modbus TCP server that simulates the device.
+-   `modbus_client.py`: A simple client to connect to the server, read the registers, and print their values.
+-   `init_venv.sh`: A script to create a Python virtual environment and install the required dependencies.
+-   `start_simulation.sh`: A script to start the Modbus TCP server.
+-   `Dockerfile`: Allows for building a Docker image of the simulator.
 
-### 1. Sestavení Docker image
+## Usage
 
-Tento příkaz sestaví Docker image s názvem `modbus-simulator`. Verze se automaticky generuje z posledního `git tagu`.
+There are two primary ways to run the simulation: locally using shell scripts or with Docker.
+
+### 1. Running with Scripts (Linux/macOS)
+
+This method is recommended for local development and testing.
+
+**Step 1: Initialize the Environment**
+
+First, run the initialization script. This will create a Python virtual environment (`venv` directory) and install the necessary dependencies from `requirements.txt`.
 
 ```bash
-VERSION=$(git describe --tags --always)
-docker build -t modbus-simulator --build-arg VERSION=$VERSION .
+./init_venv.sh
 ```
 
+**Step 2: Start the Server**
 
-## Ověření
+Once the environment is set up, you can start the Modbus server:
 
-Po spuštění se můžete k Modbus serveru připojit pomocí jakéhokoliv Modbus TCP klienta.
+```bash
+./start_simulation.sh
+```
 
-### Ověření pomocí přiloženého skriptu
+The server will start and run in the foreground. To stop it, press `Ctrl+C`.
 
-Součástí projektu je jednoduchý klient `modbus_client.py` pro rychlé ověření.
+**Step 3: Run the Client (Optional)**
 
-1.  **Vytvoření virtuálního prostředí** (doporučeno):
-    ```bash
-    python3 -m venv venv
-    ```
+To test the server, you can run the client in a separate terminal. Make sure to activate the virtual environment first:
 
-2.  **Aktivace prostředí**:
-    -   macOS/Linux:
-        ```bash
-        source venv/bin/activate
-        ```
-    -   Windows:
-        ```bash
-        venv\Scripts\activate
-        ```
+```bash
+source venv/bin/activate
+python modbus_client.py
+```
 
-3.  **Instalace závislostí**:
-    ```bash
-    pip install -r requirements.txt
-    ```
+### 2. Running with Docker
 
-4.  **Spuštění klienta**:
-    ```bash
-    python modbus_client.py
-    ```
+The simulator is also available as a pre-built image on Docker Hub, which is the easiest way to run it without setting up a local Python environment.
 
-## CI/CD
+**Step 1: Pull the Docker Image**
 
-Tento projekt využívá GitHub Actions pro automatické sestavování a publikování Docker image do [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+Pull the latest version of the image from Docker Hub.
 
-Workflow se spustí při:
-- **push** do větve `main`
-- vytvoření **tagu** ve formátu `v*.*.*`
+```bash
+docker pull miikue/modbus-simulator:latest
+```
 
-Image je publikována pod názvem `ghcr.io/OWNER/modbus-simulator:VERSION`, kde `OWNER` je vlastník repozitáře a `VERSION` odpovídá `git tagu`.
+**Step 2: Run the Container**
 
+Run the simulator in a detached container, mapping the Modbus port `5020` to your host machine.
+
+```bash
+docker run -d -p 5020:5020 --name modbus-sim miikue/modbus-simulator:latest
+```
