@@ -44,6 +44,6 @@ jobs:
         run: |
           curl -X PATCH -H "Content-Type: application/json" \
                -u ${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKERHUB_TOKEN }} \
-               -d '{"full_description": "'"$(cat README.md | sed 's/"/\\"/g')"'" }' \
+               -d '{"full_description": "'"$(cat README_docker.md | sed 's/"/\\"/g')"'" }' \
                https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}/
 
