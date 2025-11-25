@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install system dependencies required for compilation
-RUN apt-get update && apt-get install -y build-essential
+RUN apt-get update && apt-get install --no-install-recommends -y build-essential
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
