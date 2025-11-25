@@ -1,5 +1,5 @@
 # STEP 1: Build stage (Používá se pro instalaci závislostí a zkopírování compiled/binary files)
-FROM python:3.9-slim as builder
+FROM python:3.9-alpine AS builder
 
 # Nastaví pracovní adresář
 WORKDIR /app
@@ -9,7 +9,7 @@ COPY requirements.txt .
 
 # Instaluje systémové závislosti potřebné pro kompilaci (pokud jsou potřeba)
 # Mnoho knihoven to nepotřebuje, ale pro jistotu to ponecháme v této fázi
-RUN apt-get update && apt-get install --no-install-recommends -y build-essential gcc
+RUN apk add --no-cache build-base
 
 # Instaluje potřebné balíčky Pythonu. Všimněte si, že zde máme build-essential, 
 # což umožňuje instalaci balíčků s kompilovanými rozšířeními.
@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # ---
 # STEP 2: Final stage (Malý, finální image bez buildovacích závislostí)
-FROM python:3.9-slim
+FROM python:3.9-alpine
 
 # Nastaví pracovní adresář
 WORKDIR /app
