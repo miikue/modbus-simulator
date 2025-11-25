@@ -1,5 +1,5 @@
 import struct
-from pymodbus.client import ModbusTcpClient
+from pymodbus.client.sync import ModbusTcpClient
 
 def registers_to_float(regs, byte_order='>'):
     """
